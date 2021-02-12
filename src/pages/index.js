@@ -122,6 +122,7 @@ const IndexPage = () => {
       console.log('ac', ac);
       try {
         navigator.credentials.get({ otp: { transport: ['sms'] }, signal: ac.signal }).then((otp) => {
+          alert('code', otp)
           input.value = otp.code
           console.log('OTP', otp);
         }).catch((error) => {
