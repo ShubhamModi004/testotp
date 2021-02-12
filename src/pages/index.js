@@ -1,5 +1,5 @@
-import * as React from "react"
-
+import  { useState, useEffect } from "react"
+import * as React from 'react';
 // styles
 const pageStyles = {
   color: "#232129",
@@ -98,6 +98,35 @@ const links = [
 
 // markup
 const IndexPage = () => {
+  const [otp, setOtp] = useState(0)
+  useEffect(() => {
+    checkAndInitiateOTPListener();
+  }, [])
+
+  const changeOtp = (e) =>  {
+    setOtp(e.target.value)
+  }
+
+  const checkAndInitiateOTPListener = async () => {
+    if ('OTPCredential' in window) {
+      const input = document.querySelector('input[autocomplete="one-time-code"]');
+      console.log('inout', input);
+      if (!input) return;
+      const ac = new AbortController();
+      console.log('ac', ac);
+      try {
+        navigator.credentials.get({ otp: { transport: ['sms'] }, signal: ac.signal }).then((otp) => {
+          input.value = otp.code
+          console.log('OTP', otp);
+        }).catch((error) => {
+          console.log('error', error);
+        });
+      } catch (error) {
+        console.log('error qqee', error);
+      }
+    }
+  }
+
   return (
     <main style={pageStyles}>
       <title>Home Page</title>
@@ -109,13 +138,16 @@ const IndexPage = () => {
           🎉🎉🎉
         </span>
       </h1>
-      <p style={paragraphStyles}>
-        Edit <code style={codeStyles}>src/pages/index.js</code> to see this page
-        update in real-time.{" "}
-        <span role="img" aria-label="Sunglasses smiley emoji">
-          😎
-        </span>
-      </p>
+      <input
+        autoFocus
+        outlined
+        maxLength="4"
+        name="otp"
+        pattern="\d{6}"
+        autoComplete="one-time-code"
+        inputMode="numeric"
+        onChange={(e) => changeOtp(e)}
+      />
       <ul style={listStyles}>
         <li style={docLinkStyle}>
           <a
