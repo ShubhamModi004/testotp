@@ -100,7 +100,13 @@ const links = [
 const IndexPage = () => {
   const [otp, setOtp] = useState(0)
   useEffect(() => {
-    checkAndInitiateOTPListener();
+    if (document.readyState !== 'loading') {
+        checkAndInitiateOTPListener();
+    } else {
+      document.addEventListener('DOMContentLoaded', () => {
+        checkAndInitiateOTPListener();
+      });
+    }
   }, [])
 
   const changeOtp = (e) =>  {
